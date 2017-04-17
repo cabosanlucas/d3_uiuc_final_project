@@ -1,0 +1,128 @@
+{% extends "static/templates/base.html" %}
+{% block content %}
+
+<script>
+var updateNewProjectForm = function() {
+  // Read project name, return if empty
+  var projectName = $("#inputProjectName").val();
+  if (projectName == "") {
+    $("#dirName").html("&mdash;");
+    $("#hiddenDirName").val("");
+    return;
+  }
+
+
+  // Read project type, fix it for directory type
+  var projectType = $("#selectProjectType option:selected").val();
+  if (projectType == "Personal") { projectType = "per"; }
+  else if (projectType == "Demo") { projectType = "demo"; }
+  else if (projectType == "Experience") { projectType = "exp"; }
+  else if (projectType == "Project") { projectType = "proj"; }
+
+
+  // Create the directory name
+  var dirName = projectType + "_" + projectName;
+  // Remove spaces
+  dirName = dirName.replace(/\s+/g, '');
+  // Remove any non-words
+  dirName = dirName.replace(/[^\w]/gi, '')
+
+
+  // Update HTML
+  $("#dirName").html(dirName);
+  $("#hiddenDirName").val(dirName);
+};
+</script>
+
+<div class="row">
+  <div class="col-sm-4">
+    <h3>Add New Discovery</h3>
+
+    <p>
+      <i>
+        This form simply populates a new directory with a base set of files for
+        a CS 205 &quot;Discovery&quot;.  You can use it to quickly set up a
+        new directory for working on a new discovery.
+      </i>
+    </p>
+    <hr>
+    <form class="form-horizontal" action="/" method="post">
+      {% if error %}
+      <div class="alert alert-danger" role="alert">
+        {{error | safe}}
+      </div>
+      {% endif %}
+      {% if success %}
+      <div class="alert alert-success" role="alert">
+        {{success | safe}}
+      </div>
+      {% endif %}
+      <div class="form-group">
+        <label for="inputProjectName" class="col-sm-2 control-label">Name:</label>
+        <div class="col-sm-10">
+          <input oninput="updateNewProjectForm()" type="text" class="form-control" name="projectName" id="inputProjectName" placeholder="Project Name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="selectProjectType" class="col-sm-2 control-label">Type:</label>
+        <div class="col-sm-10">
+          <select class="form-control" id="selectProjectType" name="projectType" onchange="updateNewProjectForm()">
+            <option value="Personal">Personal</option>
+            <option value="Demo">Demo</option>
+            <option value="Experience">Experience</option>
+            <option value="Project">Project</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-2">
+          <b>Dir.:</b>
+        </div>
+        <div class="col-sm-10">
+          <tt id="dirName">&mdash;</tt>
+          <input type="hidden" id="hiddenDirName" name="dirName" value="">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-sm-6 col-sm-push-6">
+          <button type="submit" class="btn btn-primary form-control" id="buttonSubmit">
+            <span class="glyphicon glyphicon-plus-sign"></span>&nbsp;
+            Create Project
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-sm-4">
+    <h3>Personal</h3>
+    <ul>
+      {% for item in navigation.personal|sort(attribute="index") %}
+      <li><a href="/{{item.dir}}/">{{item.title}}</a></li>
+      {% endfor %}
+    </ul>
+    <hr>
+    <h3>Demos</h3>
+    <ul>
+      {% for item in navigation.demos|sort(attribute="index") %}
+      <li><a href="/{{item.dir}}/">{{item.title}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="col-sm-4">
+    <h3>Experiences</h3>
+    <ul>
+      {% for item in navigation.experiences|sort(attribute="index") %}
+      <li><a href="/{{item.dir}}/">{{item.title}}</a></li>
+      {% endfor %}
+    </ul>
+    <hr>
+    <h3>Projects</h3>
+    <ul>
+      {% for item in navigation.projects|sort(attribute="index") %}
+      <li><a href="/{{item.dir}}/">{{item.title}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

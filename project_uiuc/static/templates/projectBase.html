@@ -1,0 +1,24 @@
+{% extends "static/templates/base.html" %}
+
+{% block content %}
+
+
+<ol class="breadcrumb">
+  <li><a href="/">Home</a></li>
+  {% if project.showingViz %}
+  <li><a href="/{{project.dir}}/">{{project.type}}: {{project.title}}</a></li>
+  {% if project.ranCompute %}
+  <li class="active"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> + Visualization</li>
+
+  {% else %}
+  <li class="active">Visualization</li>
+  {% endif %}
+  {% else %}
+  <li class="active">{{project.type}}: {{project.title}}</li>
+  {% endif %}
+</ol>
+
+{% block projectContent %}
+{% endblock %}
+
+{% endblock %}

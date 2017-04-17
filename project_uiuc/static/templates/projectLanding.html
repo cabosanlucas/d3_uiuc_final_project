@@ -1,0 +1,86 @@
+{% extends "static/templates/projectBase.html" %}
+{% block projectContent %}
+
+<script>
+function run_py() {
+  // Hide the error box and show loading graphic...
+  $("#errorBox").hide();
+  $("#runPy").html('<img src="/static/ajax-loader.gif" /> Running Python')
+             .removeClass()
+             .addClass("btn btn-default");
+
+
+  $.get("/{{project.dir}}/py/", function (result) {
+
+    if (result.status == "Success") {
+      $("#runPy").html('<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Success!')
+                .removeClass()
+                .addClass("btn btn-success");
+
+    } else if (result.status == "Error") {
+      $("#runPy").html('<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Run compute.py')
+                .removeClass()
+                .addClass("btn btn-primary");
+
+      $("#errorBox").html(
+        '<b>Python Error:</b> ' + result.error + '<br>' +
+        '<pre>' + result.trace + '</pre>'
+      ).show();
+    } else {
+      alert("Unknown return from /{{project.dir}}/py. See JavaScript log for details.");
+      console.log(result);
+    }
+  }).fail(function(result) {
+    alert("The CS 205 Workbook server failed to respond.  Is the workbook running?  Otherwise, see the JavaScript console for details.");
+    console.log(result);
+  });
+}
+</script>
+
+<div class="alert alert-danger" role="alert" style="display: none;" id="errorBox">
+</div>
+
+
+<div class="row">
+  <div class="col-sm-4">
+    <div class="text-center">
+      <a href="#" onclick="run_py()">
+        <button id="runPy" type="button" class="btn btn-primary">
+          <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+          &nbsp;Run compute.py
+        </button>
+      </a>
+    </div>
+    <p style="font-size: 10px;" class="text-center">
+      This is equalivant to going to the command line, moving into the {{project.dir}}
+      directory, and running <code>python py/compute.py</code>.
+    </p>
+  </div>
+  <div class="col-sm-4 text-center">
+    <a href="?show=viz">
+      <button type="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        Show Visualization
+      </button>
+    </a>
+    <p style="font-size: 10px;" class="text-center">
+      This will render your <code>web/index.html</code> file (without running Python).<br>
+      Useful for debugging your visualization after you have processed your data.
+    </p>
+  </div>
+  <div class="col-sm-4 text-center">
+    <a href="?show=py_viz">
+      <button type="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        Compute &amp; Show Visualization
+      </button>
+    </a>
+    <p style="font-size: 10px;" class="text-center">
+      This will run your <code>py/compute.py</code> code and render your <code>web/index.html</code> file.<br>
+      Useful for making changes to Python and see how the visualization changes.
+    </p>
+  </div>
+</div>
+
+{% endblock %}
