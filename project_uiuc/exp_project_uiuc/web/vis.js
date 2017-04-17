@@ -2,7 +2,7 @@
 
 /* Boilerplate jQuery */
 $(function() {
-  $.get("res/stateslived.csv")
+  $.get("res/students-by-state.csv")
    .done(function (csvData) {
      var data = d3.csvParse(csvData);
      visualize(data);
