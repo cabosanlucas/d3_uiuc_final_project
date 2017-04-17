@@ -47,7 +47,11 @@ var defaultColor = "rgb(213,222,217)";
 
 // Define linear scale for output
 var colorScale = d3.scaleLinear()
-        .range([defaultColor,"rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
+    .range([defaultColor,"rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
+
+var studentsScale = d3.scaleLog()
+    .domain([1,30320])
+    .range([0,255]);
 
 d3.json("web/us-states.json", function(error, statesData) {
     console.log(statesData);
@@ -77,7 +81,9 @@ d3.json("web/us-states.json", function(error, statesData) {
 
             if (numStudents) {
                 //If value exists…
-                return colorScale(numStudents);
+                var color = "rgb(" + Math.round(studentsScale(numStudents)) + ",173,168)";
+                console.log(color);
+                return color;
             } else {
                 //If value is undefined…
                 return defaultColor;
