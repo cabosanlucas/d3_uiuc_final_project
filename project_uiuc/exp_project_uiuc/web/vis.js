@@ -18,8 +18,8 @@ var visualize = function(data) {
 
   // == BOILERPLATE ==
   var margin = { top: 50, right: 50, bottom: 50, left: 75 },
-     width = 800 - margin.left - margin.right,
-     height = (data.length * 1);
+     width = 1000,
+     height = 1000;
 
   var svg = d3.select("#chart")
               .append("svg")
@@ -44,29 +44,42 @@ var visualize = function(data) {
 
     
 // Define linear scale for output
-var color = d3.scaleLinear()
+var colorScale = d3.scaleLinear()
         .range(["rgb(213,222,217)","rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
 
+d3.json("web/us-states.json", function(error, statesData) {
+    console.log(statesData);
 
+    // add # of students data to states json
+    for (var state = 0; state < statesData.features.length; state++) {
+        var currentState = statesData.features[state].properties.name;
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].name == currentState) {
+                statesData.features[state].properties.numStudents = data[i].number;
+                break;
+            }
+        }
+    }
+    console.log(statesData);
   // Bind the data to the SVG and create one path per GeoJSON feature
-svg.selectAll("path")
-  .data(data)
-  .enter()
-  .append("path")
-  .attr("d", path)
-  .style("stroke", "#fff")
-  .style("stroke-width", "1")
-  .style("fill", function(d) {
+    svg.selectAll("path")
+       .data(statesData.features)
+       .enter()
+       .append("path")
+       .attr("d", path)
+       .style("stroke", "#fff")
+       .style("stroke-width", "1")
+       .style("fill", function(d) {
+            // Get data value
+            var numStudents = d.properties.numStudents;
 
-  // Get data value
-  var value = d.number;
-
-  if (value) {
-  //If value exists…
-  return color(value);
-  } else {
-  //If value is undefined…
-  return "rgb(213,222,217)";
-  }
-});
+            if (numStudents) {
+                //If value exists…
+                return colorScale(numStudents);
+            } else {
+                //If value is undefined…
+                return "rgb(213,222,217)";
+            }
+        });
+    });
 };
