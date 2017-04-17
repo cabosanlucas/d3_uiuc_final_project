@@ -43,9 +43,11 @@ var visualize = function(data) {
 //          .projection(projection);  // tell path generator to use albersUsa projection
 
     
+var defaultColor = "rgb(213,222,217)";
+
 // Define linear scale for output
 var colorScale = d3.scaleLinear()
-        .range(["rgb(213,222,217)","rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
+        .range([defaultColor,"rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
 
 d3.json("web/us-states.json", function(error, statesData) {
     console.log(statesData);
@@ -78,7 +80,7 @@ d3.json("web/us-states.json", function(error, statesData) {
                 return colorScale(numStudents);
             } else {
                 //If value is undefined…
-                return "rgb(213,222,217)";
+                return defaultColor;
             }
         });
     });
