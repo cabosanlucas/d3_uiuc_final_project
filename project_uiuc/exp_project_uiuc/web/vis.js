@@ -33,29 +33,12 @@ var visualize = function(data) {
 
 
   // == Your code! :) ==
-  // D3 Projection
-// var projection = d3.geo.albersUsa()
-//            .translate([width/2, height/2])    // translate to center of screen
-//            .scale([1000]);          // scale things down so see entire US
-        
-// // Define path generator
-// var path = d3.geo.path()               // path generator that will convert GeoJSON to SVG paths
-//          .projection(projection);  // tell path generator to use albersUsa projection
-
-    
-var defaultColor = "rgb(213,222,217)";
-
-// Define linear scale for output
-var colorScale = d3.scaleLinear()
-    .range([defaultColor,"rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
-
 var studentsScale = d3.scaleLog()
     .domain([1,30320])
-    .range([0,255]);
+    .range([0,100]);
 
 d3.json("web/us-states.json", function(error, statesData) {
     console.log(statesData);
-
     // add # of students data to states json
     for (var state = 0; state < statesData.features.length; state++) {
         var currentState = statesData.features[state].properties.name;
@@ -67,6 +50,7 @@ d3.json("web/us-states.json", function(error, statesData) {
         }
     }
     console.log(statesData);
+
   // Bind the data to the SVG and create one path per GeoJSON feature
     svg.selectAll("path")
        .data(statesData.features)
@@ -81,12 +65,11 @@ d3.json("web/us-states.json", function(error, statesData) {
 
             if (numStudents) {
                 //If value exists…
-                var color = "rgb(" + Math.round(studentsScale(numStudents)) + ",173,168)";
-                console.log(color);
+                var color = "hsla(190," + Math.round(studentsScale(numStudents)) + "%,50%,1)";
                 return color;
             } else {
                 //If value is undefined…
-                return defaultColor;
+                return "hsla(190,0%,0%,1)";
             }
         });
     });
