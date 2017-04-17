@@ -33,6 +33,9 @@ var visualize = function(data) {
 
 
   // == Your code! :) ==
+var projection = d3.geoAlbers(),
+    path = d3.geoPath(projection);
+
 var studentsScale = d3.scaleLog()
     .domain([1,30320])
     .range([0,100]);
