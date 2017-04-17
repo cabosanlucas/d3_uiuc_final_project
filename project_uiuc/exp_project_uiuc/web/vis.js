@@ -40,7 +40,7 @@ var studentsScale = d3.scaleLog()
     .domain([1,30320])
     .range([0,100]);
 
-d3.json("web/us-states.json", function(error, statesData) {
+d3.json("res/us-states.json", function(error, statesData) {
     console.log(statesData);
     // add # of students data to states json
     for (var state = 0; state < statesData.features.length; state++) {
