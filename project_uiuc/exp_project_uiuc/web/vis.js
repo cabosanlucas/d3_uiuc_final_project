@@ -40,6 +40,18 @@ var studentsScale = d3.scaleLog()
     .domain([1,30320])
     .range([0,100]);
 
+var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .html(function(d) {
+        var htmlString = "<div align=\"center\">";
+        htmlString += d.properties.name + "<br>";
+        htmlString += String(d.properties.numStudents) + " students";
+        htmlString += "</div>";
+        return htmlString;
+    });
+
+svg.call(tip);
+
 d3.json("res/us-states.json", function(error, statesData) {
     console.log(statesData);
     // add # of students data to states json
@@ -74,6 +86,8 @@ d3.json("res/us-states.json", function(error, statesData) {
                 //If value is undefined…
                 return "hsla(190,0%,0%,1)";
             }
-        });
+        })
+        .on("mouseover", tip.show)
+        .on("mouseout", tip.hide);
     });
 };
