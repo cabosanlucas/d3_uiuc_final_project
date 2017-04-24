@@ -40,6 +40,26 @@ var studentsScale = d3.scaleLog()
     .domain([1,30320])
     .range([0,100]);
 
+var legendScale = d3.scaleLog()
+    .domain([1,30320])
+    .range(["hsla(190,0%,50%,1)", "hsla(190,100%,50%,1)"]);
+
+svg.append("g")
+    .attr("class", "legendLinear")
+    .attr("transform", "translate(20,500)");
+
+var legendLinear = d3.legendColor()
+    .shapeWidth(30)
+    .cells([10,100,1000,10000])
+    .shape("circle")
+    .shapePadding(20)
+    .orient("horizontal")
+    .scale(legendScale);
+         
+
+svg.select(".legendLinear")
+    .call(legendLinear);
+
 var tip = d3.tip()
     .attr('class', 'd3-tip')
     .html(function(d) {
