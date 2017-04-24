@@ -51,6 +51,7 @@ svg.append("g")
 var legendLinear = d3.legendColor()
     .shapeWidth(30)
     .cells([10,100,1000,10000])
+    .label(["low enrollment","","","high enrollment"]);
     .shape("circle")
     .shapePadding(20)
     .orient("horizontal")
