@@ -1,12 +1,51 @@
 {% extends "static/templates/projectBase.html" %}
 {% block projectContent %}
 
-<h2>UIUC Student Enrollment in 2016 by State</h2>
+<h2>UIUC Student Enrollment 2008 - 2016 by State</h2>
 <h5>A data visualization by Ophir Sneh, Kabir Manghnani, Ray Sun, Jackson DeDobblaere, Bobby Lu, and Travis Newgren</h5>
 <div id="chart"></div>
 
 <script src="https://d3js.org/d3-array.v1.min.js"></script>
 <script src="https://d3js.org/d3-geo.v1.min.js"></script>
 <script src="web/vis.js"></script>
+
+<style>
+
+.ticks {
+  font: 10px sans-serif;
+}
+
+.track,
+.track-inset,
+.track-overlay {
+  stroke-linecap: round;
+}
+
+.track {
+  stroke: #000;
+  stroke-opacity: 0.3;
+  stroke-width: 10px;
+}
+
+.track-inset {
+  stroke: #ddd;
+  stroke-width: 8px;
+}
+
+.track-overlay {
+  pointer-events: stroke;
+  stroke-width: 50px;
+  stroke: transparent;
+  cursor: crosshair;
+}
+
+.handle {
+  fill: #fff;
+  stroke: #000;
+  stroke-opacity: 0.5;
+  stroke-width: 1.25px;
+}
+
+</style>
 
 {% endblock %}
