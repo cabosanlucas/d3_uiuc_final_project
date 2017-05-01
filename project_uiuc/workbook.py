@@ -49,7 +49,7 @@ def home_createDir():
 @app.route('/')
 def home():
     navigation = construct_navigation()
-    return render_template('static/templates/mainPage.html', navigation=navigation)
+    return render_template('static/templates/base.html', navigation=navigation)
 
 #
 # Files inside of /exercise/res and /exercise/web should be routed as
