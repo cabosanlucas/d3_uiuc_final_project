@@ -40,11 +40,11 @@ var projection = d3.geoAlbers(),
     path = d3.geoPath(projection);
 
 var studentsScale = d3.scaleLog()
-    .domain([1,30320])
+    .domain([1,35000])
     .range([0,100]);
 
-var legendScale = d3.scaleLog()
-    .domain([1,30320])
+var colorScale = d3.scaleLog()
+    .domain([1,35000])
     .range(["hsla(190,0%,50%,1)", "hsla(190,100%,50%,1)"]);
 
 svg.append("g")
@@ -58,7 +58,7 @@ var legendLinear = d3.legendColor()
     .shape("circle")
     .shapePadding(20)
     .orient("horizontal")
-    .scale(legendScale);
+    .scale(colorScale);
          
 svg.select(".legendLinear")
     .call(legendLinear);
@@ -110,66 +110,60 @@ slider.insert("g", ".track-overlay")
 var handle = slider.insert("circle", ".track-overlay")
     .attr("class", "handle")
     .attr("r", 9);
-/*
 slider.transition() // Gratuitous intro!
     .duration(750)
     .tween("hue", function() {
-      var i = d3.interpolate(0, 70);
+      var i = d3.interpolate(0, 1);
       return function(t) { hue(i(t)); };
     });
-    */
 function hue(h) {
       handle.attr("cx", x(h));
-      //console.log(h);
       if(h < 0.5 && currentYearIndex == 1) {
-        currentYearIndex = 0;
-        visualize(data);
-        console.log(data[0].color);
+      currentYearIndex = 0;
+        var newData = data;
+        bind(newData);
       }
       if(h>=0.5 && currentYearIndex == 0){
         currentYearIndex = 1; 
-        visualize(data);
+        var newData = data;
+        bind(newData);
       }
+      //svg.select(".legendLinear").call(colorScale);
 }
 
-d3.json("res/us-states.json", function(error, statesData) {
-    // add # of students data to states json
-    for (var state = 0; state < statesData.features.length; state++) {
-        var currentState = statesData.features[state].properties.name;
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].name == currentState) {
-                statesData.features[state].properties["2008"] = data[i]["2008"];
-                statesData.features[state].properties["2016"] = data[i]["2016"];
-                break;
+function bind(studentData) {
+    d3.json("res/us-states.json", function(error, statesData) {
+        console.log("a");
+        for (var state = 0; state < statesData.features.length; state++) {
+            var currentState = statesData.features[state].properties.name;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].name == currentState) {
+                    statesData.features[state].properties["2008"] = studentData[i]["2008"];
+                    statesData.features[state].properties["2016"] = studentData[i]["2016"];
+                    break;
+                }
             }
         }
-    }
-
-  // Bind the data to the SVG and create one path per GeoJSON feature
+        console.log("b");
     svg.selectAll("path")
-       .data(statesData.features)
+       .data(statesData.features, function(d){ return d;})
        .enter()
        .append("path")
+       .attr("class","states")
        .attr("d", path)
        .style("stroke", "#fff")
        .style("stroke-width", "1")
        .style("fill", function(d) {
             // Get data value
-            var numStudents = d.properties[years[currentYearIndex]];
-
-            if (numStudents) {
-                //If value exists…
-                var color = "hsla(190," + Math.round(studentsScale(numStudents)) + "%,50%,1)";
-                return color;
-            } else {
-                //If value is undefined…
-                return "hsla(190,0%,0%,1)";
-            }
-
-        })
-        .on("mouseover", tip.show)
-        .on("mouseout", tip.hide);
+        console.log("c");
+            console.log(colorScale(d.properties[years[currentYearIndex]]));   
+            return colorScale(d.properties[years[currentYearIndex]]);
+       })
+       .on("mouseover", tip.show)
+       .on("mouseout", tip.hide);
     });
+}
 };
+
 
 
